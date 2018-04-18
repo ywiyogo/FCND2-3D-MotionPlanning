@@ -124,22 +124,27 @@ class MotionPlanning(Drone):
         # YW: read lat0, lon0 from colliders into floating point values
         with open('colliders.csv') as f:
             first_line = f.readline()
-            geodatic=[]
+            geo_lat_lon=[]
             for col in [x.strip() for x in first_line.split(',')]:
-                geodatic.append(float(col.split(' ')[1]))
-
+                geo_lat_lon.append(float(col.split(' ')[1]))
+                
+        print("Geodatic: ",geo_lat_lon)
+        # YW: set home position to (lon0, lat0, 0). Beware of the lat0, lon0 in collider.csv!
+        self._home_longitude = geo_lat_lon[1]
+        self._home_latitude = geo_lat_lon[0]
         
-        print("Geodatic: ",geodatic)
-        # YW: set home position to (lon0, lat0, 0)
-        self._home_longitude = geodatic[0]
-        self._home_latitude = geodatic[1]
         
-        # TODO: retrieve current global position
- 
-        # TODO: convert to current local position using global_to_local()
+        # YW: retrieve current global position
+        g_pose = self.global_position
+        print("Global pose: ", g_pose)
+        print("Global home: ", self.global_home)
         
+        # YW: convert to current local position using global_to_local()
+        l_pose = global_to_local(self.local_position, self.global_home)
+        print("local pose: ", l_pose)
         print('global home {0}, position {1}, local position {2}'.format(self.global_home, self.global_position,
                                                                          self.local_position))
+        print("------------------------")                                                                            
         # Read in obstacle map
         data = np.loadtxt('colliders.csv', delimiter=',', dtype='Float64', skiprows=2)
         
