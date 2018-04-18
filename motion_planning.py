@@ -23,7 +23,9 @@ class States(Enum):
 
 
 class MotionPlanning(Drone):
-
+    '''
+    The MotionPlanning class inherits the Drone class of udacidrone
+    '''
     def __init__(self, connection):
         super().__init__(connection)
 
@@ -119,10 +121,19 @@ class MotionPlanning(Drone):
 
         self.target_position[2] = TARGET_ALTITUDE
 
-        # TODO: read lat0, lon0 from colliders into floating point values
-        
-        # TODO: set home position to (lon0, lat0, 0)
+        # YW: read lat0, lon0 from colliders into floating point values
+        with open('colliders.csv') as f:
+            first_line = f.readline()
+            geodatic=[]
+            for col in [x.strip() for x in first_line.split(',')]:
+                geodatic.append(float(col.split(' ')[1]))
 
+        
+        print("Geodatic: ",geodatic)
+        # YW: set home position to (lon0, lat0, 0)
+        self._home_longitude = geodatic[0]
+        self._home_latitude = geodatic[1]
+        
         # TODO: retrieve current global position
  
         # TODO: convert to current local position using global_to_local()
@@ -150,9 +161,11 @@ class MotionPlanning(Drone):
         path, _ = a_star(grid, heuristic, grid_start, grid_goal)
         # TODO: prune path to minimize number of waypoints
         # TODO (if you're feeling ambitious): Try a different approach altogether!
-
+        print("Path: ",path)
         # Convert path to waypoints
         waypoints = [[p[0] + north_offset, p[1] + east_offset, TARGET_ALTITUDE, 0] for p in path]
+        
+        print("Waypoints: ",waypoints)
         # Set self.waypoints
         self.waypoints = waypoints
         # TODO: send waypoints to sim (this is just for visualization of waypoints)
