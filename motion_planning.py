@@ -9,7 +9,7 @@ from planning_utils import a_star, heuristic, create_grid
 from udacidrone import Drone
 from udacidrone.connection import MavlinkConnection
 from udacidrone.messaging import MsgID
-from udacidrone.frame_utils import global_to_local
+from udacidrone.frame_utils import global_to_local, local_to_global
 
 
 class States(Enum):
@@ -135,13 +135,13 @@ class MotionPlanning(Drone):
         
         
         # YW: retrieve current global position
-        g_pose = self.global_position
-        print("Global pose: ", g_pose)
+        pose_global = self.global_position
+        print("Global pose: ", pose_global)
         print("Global home: ", self.global_home)
         
         # YW: convert to current local position using global_to_local()
-        l_pose = global_to_local(self.local_position, self.global_home)
-        print("local pose: ", l_pose)
+        pose_local = global_to_local(self.local_position, self.global_home)
+        print("local pose: ", pose_local)
         print('global home {0}, position {1}, local position {2}'.format(self.global_home, self.global_position,
                                                                          self.local_position))
         print("------------------------")                                                                            
@@ -153,15 +153,19 @@ class MotionPlanning(Drone):
         print("North offset = {0}, east offset = {1}".format(north_offset, east_offset))
         # Define starting point on the grid (this is just grid center)
         grid_start = (-north_offset, -east_offset)
-        # TODO: convert start position to current position rather than map center
-        
+        # YW: convert start position to current position rather than map center
+        pose_grid = pose_global + grid_start
+        print("pose_grid: ", pose_grid)
         # Set goal as some arbitrary position on the grid
         grid_goal = (-north_offset + 10, -east_offset + 10)
         # TODO: adapt to set goal as latitude / longitude position and convert
+        grid_goal_geodatic = local_to_global(grid_goal, , self.global_home)
+
+        print("grid_goal_geodatic: ", grid_goal_geodatic)
 
         # Run A* to find a path from start to goal
-        # TODO: add diagonal motions with a cost of sqrt(2) to your A* implementation
-        # or move to a different search space such as a graph (not done here)
+        # YW: add diagonal motions with a cost of sqrt(2) to your A* implementation
+        # or move to a different search space such as a graph (not done here) -> planning_utils
         print('Local Start and Goal: ', grid_start, grid_goal)
         path, _ = a_star(grid, heuristic, grid_start, grid_goal)
         # TODO: prune path to minimize number of waypoints
