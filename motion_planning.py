@@ -198,20 +198,17 @@ class MotionPlanning(Drone):
         
         if self.mode == 'grid':
             path, _ = a_star(grid, heuristic, grid_start, grid_goal)
-            # YW [6]: prune path to minimize number of waypoints
-            #  (if you're feeling ambitious): Try a different approach altogether!
             path = prune_path(path)
             print("Path: ",path)
             # Convert path to waypoints
             waypoints = [[p[0] + north_min, p[1] + east_min, TARGET_ALTITUDE, 0] for p in path]
             print("Waypoints: ",waypoints)
+            
         elif self.mode== "graph":
             # Use KdSampler instead of create grid
             graph_start = tuple(int_cur_pose_local.tolist())
             graph_goal = tuple(int_local_goal.tolist())
-            # map_data_range = [-316, -445, 595, 466]
-            # start = [map_data_range[0] + 100, map_data_range[1] + 100]
-            # goal =  [map_data_range[2] - 200, map_data_range[3] - 150]
+
             print("Start: {0}, goal: {1}".format(graph_start, graph_goal))
 
             kdtree_sampler = prmap.KdSampler(data, 140, graph_start, graph_goal, SAFETY_DISTANCE)

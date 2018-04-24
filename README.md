@@ -6,7 +6,6 @@
 This 3D motion planning project simulates the planning algorithm of a drone in a 3D space of San Francisco (US). The goal of this project is to implement the basic planning algorithm using A*, collinearity check, Bresenham. Understanding the geodetic, ECEF (earth-centered, earth-fixed), NED (north, east, down) coordinates are the basic requirements to deal with the simulator.
 
 
-
 ## Writeup
 
 ### Understanding the starter code in `motion_planning.py` and `planning_utils.py`
@@ -81,6 +80,14 @@ Due to the computing time of sampling the whole map, I generate the random sampl
 
 Thus, I can generate dense samples in the smaller area that is more significant for the A star planning algorithm. From the start and goal, I can compute the distance. The middle of this distance is the center of the circle. Furthermore, I modified the A* algorithm so that I can use it to find the best path using the graph representation.
 
+## Quick Start
+
+1. Download the Motion-Planning simulator for this project from the [simulator releases respository](https://github.com/udacity/FCND-Simulator-Releases/releases).
+2. Clone this repository
+3. Setup the Python environment by cloning the [starter kit](https://github.com/udacity/FCND-Term1-Starter-Kit).
+4. Activate the environment by running `source activate fcnd`
+5. Open a new console, run the simulator and choose the motion planning simulator
+6. Execute `python motion_planning.py` for testing the probabilistic roadmap or `python motion_planning.py --mode grid` for testing the grid solution using the collinearity check.
 
 ## Result
 ### Grid map and Collinearity Approach
@@ -106,7 +113,7 @@ This is another possible result of incorporating the safety distance:
 
 ## Further Work
 
-The next approach to deal with the dynamic real world planning is to implement the receding horizon algorithm, which is not implemented here.
+The next approach to deal with the dynamic real world planning is to implement the receding horizon algorithm and automatic replanning, which are not implemented here.
 Based on the lesson 8, the receding horizon can be implemented by following these steps:
 
 1. Load the colliders data
