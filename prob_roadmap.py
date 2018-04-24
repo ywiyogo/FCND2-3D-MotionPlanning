@@ -100,10 +100,11 @@ class KdSampler:
         self._obstKD_Tree = KDTree(data[:, 0:3])
         dist = np.linalg.norm(np.array(goal[:2]) - np.array(start[:2]))
         center = (np.array(goal[:2]) + np.array(start[:2])) / 2
-        radius = dist / 2
+        rad_deviation = 5   # to deal with a dead end or possible redirections
+        radius = (dist / 2) + rad_deviation
         print("Air distance: ", dist)
         # Generate samples in the circle with diameter from start and goal points
-        xvals, yvals = gen_circular_random(center, radius + 5, num_samples, self._area)
+        xvals, yvals = gen_circular_random(center, radius , num_samples, self._area)
         zvals = np.random.uniform(self._min_z, self._max_z, num_samples).astype(int)
 
         rand_3dsamples = list(zip(xvals, yvals, zvals))
